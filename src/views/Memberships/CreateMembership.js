@@ -10,6 +10,7 @@ const CreateMembership = () => {
     lastName: yup.string().required("Last name is required!"),
     email: yup.string().email().required(),
     gender: yup.string().required("Gender is required!"),
+    contactNumber: yup.string().required(),
     address: yup
       .array()
       .of(
@@ -20,7 +21,7 @@ const CreateMembership = () => {
         })
       )
       .required(),
-
+    userId: yup.string().required(),
     amountOfMembership: yup.string().required("Amount is required!"),
   });
   const formOptions = { resolver: yupResolver(membershipFormSchema) };
@@ -135,28 +136,51 @@ const CreateMembership = () => {
                     <label for="inputState" className="form-label">
                       Gender
                     </label>
-                    {/* Gender need to implement with select option  */}
-                    <input
-                      type="text"
+                    <select
+                      id="inputState"
                       {...register("gender")}
                       className={`form-control  
-                            mt-1 ${errors.gender ? "is-invalid" : ""}`}
-                      placeholder="Gender"
-                    />
+                      mt-1 ${errors.gender ? "is-invalid" : ""}`}
+                    >
+                      <option defaultChecked value={1}>
+                        Male
+                      </option>
+                      <option value={2}>Female</option>
+                      <option value={3}>Other</option>
+                    </select>
+                    <div className="invalid-feedback">
+                      {errors.gender?.message}
+                    </div>
                   </div>
-                  <div className="col-md-2">
-                    <label for="inputZip" className="form-label">
-                      Zip
+                  <div className="col-md-3">
+                    <label for="contactNumber" className="form-label">
+                      Contact Number
                     </label>
-                    <input type="text" className="form-control" id="inputZip" />
+                    <input
+                      {...register("contactNumber")}
+                      className={`form-control mt-1 ${
+                        errors.contactNumber ? "is-invalid" : ""
+                      }`}
+                      type="text"
+                      id="gridCheck"
+                    />
+                    <div className="invalid-feedback">
+                      {errors.contactNumber?.message}
+                    </div>
                   </div>
                   <div className="col-12">
                     <div className="form-check">
                       <input
-                        className="form-check-input"
-                        type="checkbox"
+                        {...register("contactNumber")}
+                        className={`form-control mt-1 ${
+                          errors.contactNumber ? "is-invalid" : ""
+                        }`}
+                        type="text"
                         id="gridCheck"
                       />
+                      <div className="invalid-feedback">
+                        {errors.contactNumber?.message}
+                      </div>
                       <label className="form-check-label" for="gridCheck">
                         Check me out
                       </label>
