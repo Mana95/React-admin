@@ -32,6 +32,11 @@ const CreateMembership = () => {
     console.log({ event });
     reset();
   };
+  const AddAddressHandler = (event)=>{
+    console.log(event)
+  }
+
+
   return (
     <>
       <div className="card mb-8">
@@ -168,23 +173,25 @@ const CreateMembership = () => {
                       {errors.contactNumber?.message}
                     </div>
                   </div>
-                  <div className="col-12">
-                    <div className="form-check">
+                  <div className="col-md-3">
+                    <label for="userId" className="form-label">User Key</label>
                       <input
-                        {...register("contactNumber")}
+                        {...register("userId")}
                         className={`form-control mt-1 ${
-                          errors.contactNumber ? "is-invalid" : ""
+                          errors.userId ? "is-invalid" : ""
                         }`}
                         type="text"
-                        id="gridCheck"
+                        id="userId"
                       />
-                      <div className="invalid-feedback">
-                        {errors.contactNumber?.message}
-                      </div>
-                      <label className="form-check-label" for="gridCheck">
-                        Check me out
-                      </label>
-                    </div>
+                  </div>
+                  <div className="form-row">
+                  <div class="form-group col-md-12">
+                  <h4 className="jumbotron text-left"><b>Address  </b>
+                  <button type="button" className="btn btn-primary"
+                  onClick={AddAddressHandler}
+                  ><b>+</b></button>
+                  </h4>
+                  </div>
                   </div>
                   <div className="col-12">
                     <button type="submit" className="btn btn-primary">
