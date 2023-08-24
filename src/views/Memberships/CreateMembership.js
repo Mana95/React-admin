@@ -1,6 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
+import { useEffect } from "react";
 
 const CreateMembership = () => {
   const membershipFormSchema = yup.object().shape({
@@ -11,7 +12,7 @@ const CreateMembership = () => {
     email: yup.string().email().required(),
     gender: yup.string().required("Gender is required!"),
     contactNumber: yup.string().required(),
-    address: yup
+    addresses: yup
       .array()
       .of(
         yup.object({
@@ -24,18 +25,41 @@ const CreateMembership = () => {
     userId: yup.string().required(),
     amountOfMembership: yup.string().required("Amount is required!"),
   });
-  const formOptions = { resolver: yupResolver(membershipFormSchema) };
-  const { register, handleSubmit, reset, formState } = useForm(formOptions);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const formOptions = {
+    resolver: yupResolver(membershipFormSchema),
+    defaultValues: {
+      addresses: [],
+    },
+  };
+  const { register, handleSubmit, reset, setValue,
+     control, remove, formState ,getValues,append} =
+    useForm(formOptions);
   const { errors } = formState;
 
   const onSubmitHandler = (event) => {
     console.log({ event });
     reset();
   };
-  const AddAddressHandler = (event)=>{
-    console.log(event)
-  }
 
+  const addAddress = () => {
+    const currentAddresses = getValues('addresses');
+    setValue('addresses', [
+      ...currentAddresses,
+      { city: '', streetName: '', town: '' },
+    ]);
+    console.log(getValues('addresses'));
+  };
+
+  const removeAddress = (index) => {
+    remove(`address.${index}`);
+  };
+
+  useEffect(()=>{
+    setValue('addresses', [
+      { city: '', streetName: '', town: '' },
+    ]);
+  },[formOptions, setValue])
 
   return (
     <>
@@ -51,13 +75,13 @@ const CreateMembership = () => {
                   </b>
                 </h2>
               </div>
-              <div class="card-body">
+              <div className="card-body">
                 <form
                   className="row g-3"
                   onSubmit={handleSubmit(onSubmitHandler)}
                 >
                   <div className="col-md-3">
-                    <label for="membershipId" className="form-label">
+                    <label htmlFor="membershipId" className="form-label">
                       Membership Id
                     </label>
                     <input
@@ -73,7 +97,7 @@ const CreateMembership = () => {
                     </div>
                   </div>
                   <div className="col-md-3">
-                    <label for="membershipId" className="form-label">
+                    <label htmlFor="membershipId" className="form-label">
                       Membership Name
                     </label>
                     <input
@@ -89,7 +113,7 @@ const CreateMembership = () => {
                     </div>
                   </div>
                   <div className="col-3">
-                    <label for="FirstName" className="form-label">
+                    <label htmlFor="FirstName" className="form-label">
                       First Name
                     </label>
                     <input
@@ -106,7 +130,7 @@ const CreateMembership = () => {
                     </div>
                   </div>
                   <div className="col-3">
-                    <label for="lastName" className="form-label">
+                    <label htmlFor="lastName" className="form-label">
                       Last Name
                     </label>
                     <input
@@ -123,7 +147,7 @@ const CreateMembership = () => {
                     </div>
                   </div>
                   <div className="col-md-3">
-                    <label for="email" className="form-label">
+                    <label htmlFor="email" className="form-label">
                       Email
                     </label>
                     <input
@@ -138,7 +162,7 @@ const CreateMembership = () => {
                     </div>
                   </div>
                   <div className="col-md-3">
-                    <label for="inputState" className="form-label">
+                    <label htmlFor="inputState" className="form-label">
                       Gender
                     </label>
                     <select
@@ -158,7 +182,7 @@ const CreateMembership = () => {
                     </div>
                   </div>
                   <div className="col-md-3">
-                    <label for="contactNumber" className="form-label">
+                    <label htmlFor="contactNumber" className="form-label">
                       Contact Number
                     </label>
                     <input
@@ -174,25 +198,80 @@ const CreateMembership = () => {
                     </div>
                   </div>
                   <div className="col-md-3">
-                    <label for="userId" className="form-label">User Key</label>
-                      <input
-                        {...register("userId")}
-                        className={`form-control mt-1 ${
-                          errors.userId ? "is-invalid" : ""
-                        }`}
-                        type="text"
-                        id="userId"
-                      />
+                    <label htmlFor="userId" className="form-label">
+                      User Key
+                    </label>
+                    <input
+                      {...register("userId")}
+                      className={`form-control mt-1 ${
+                        errors.userId ? "is-invalid" : ""
+                      }`}
+                      type="text"
+                      id="userId"
+                    />
                   </div>
                   <div className="form-row">
-                  <div class="form-group col-md-12">
-                  <h4 className="jumbotron text-left"><b>Address  </b>
-                  <button type="button" className="btn btn-primary"
-                  onClick={AddAddressHandler}
-                  ><b>+</b></button>
-                  </h4>
+                    <div className="form-group col-md-12">
+                      <h4 className="jumbotron text-left">
+                        <b>Address </b>
+                        <button
+                          type="button"
+                          className="btn btn-primary"
+                          onClick={addAddress}
+                        >
+                          <b>+</b>
+                        </button>
+                        <button
+                          type="button"
+                          className="btn btn-danger"
+                          onClick={removeAddress}
+                        >
+                          <b>-</b>
+                        </button>
+                      </h4>
+                    </div>
+
                   </div>
+                  <span>{getValues('addresses').length}</span>
+                    {getValues('addresses').map((_, index) => (
+          <div key={index} className="form-row">
+            <Controller
+              name={`addresses[${index}].city`}
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+              <div className="col-md-3">
+                  <label htmlFor={index+field} className="form-label">{field[index]}</label>
+                  <input
+                  className="form-control mt-1"
+                  type="text"
+                  {...field}
+                  placeholder={"Enter "+field[index]}
+                />
+                  {/* </div>
+                  <div className="col-md-3">
+                  <label htmlFor="index+field} className="form-label">{field.streetName}</label>
+                  <input
+                  className="form-control mt-1"
+                  type="text"
+                  {...field}
+                  placeholder={"Enter "+field.streetName}
+                />
                   </div>
+                  <div className="col-md-3">
+                  <label htmlFor="index+field} className="form-label">{field.town}</label>
+                  <input
+                  className="form-control mt-1"
+                  type="text"
+                  {...field}
+                  placeholder={"Enter "+field.town}
+                /> */}
+                  </div> 
+              )}
+            />
+          </div>
+        ))}
+                    
                   <div className="col-12">
                     <button type="submit" className="btn btn-primary">
                       Sign in
