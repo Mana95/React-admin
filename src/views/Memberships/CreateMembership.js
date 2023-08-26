@@ -1,9 +1,12 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { Controller, useForm } from "react-hook-form";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const CreateMembership = () => {
+
+  const [inputAddress , setInputAddress] = useState([])
+
   const membershipFormSchema = yup.object().shape({
     membershipId: yup.string().required("Membership Id is required! "),
     membershipName: yup.string().required("Membership name is required!"),
@@ -32,7 +35,7 @@ const CreateMembership = () => {
       addresses: [],
     },
   };
-  const { register, handleSubmit, reset, setValue,
+  const { register, handleSubmit, reset, setValue,watch,
      control, remove, formState ,getValues,append} =
     useForm(formOptions);
   const { errors } = formState;
@@ -48,6 +51,7 @@ const CreateMembership = () => {
       ...currentAddresses,
       { city: '', streetName: '', town: '' },
     ]);
+    
     console.log(getValues('addresses'));
   };
 
@@ -55,11 +59,13 @@ const CreateMembership = () => {
     remove(`address.${index}`);
   };
 
-  useEffect(()=>{
-    setValue('addresses', [
-      { city: '', streetName: '', town: '' },
-    ]);
-  },[formOptions, setValue])
+  const numbersOfAddress = watch('addresses') ;
+
+  // useEffect(()=>{
+  //   setValue('addresses', [
+  //     { city: '', streetName: '', town: '' },
+  //   ]);
+  // },[numbersOfAddress])
 
   return (
     <>
@@ -230,10 +236,11 @@ const CreateMembership = () => {
                         </button>
                       </h4>
                     </div>
-
                   </div>
-                  <span>{getValues('addresses').length}</span>
-                    {getValues('addresses').map((_, index) => (
+
+                 <span>{getValues('addresses') && getValues('addresses').length}</span>
+
+                    {getValues('addresses') && getValues('addresses').map((_, index) => (
           <div key={index} className="form-row">
             <Controller
               name={`addresses[${index}].city`}

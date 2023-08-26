@@ -3,8 +3,8 @@ import './App.css';
 import NotFound from './views/NotFound';
 import ProductDetails from './components/ProductDetails';
 import { Suspense } from 'react';
-import Login from './components/Access/Login';
 import Register from './components/Access/Register';
+import CreateMembership from './views/Memberships/CreateMembership';
 
 
 
@@ -14,7 +14,7 @@ const App = ()=> {
     <>
     <Suspense fallback={<div className="container">Loading...</div>}>
     <Routes>
-          <Route path="/login" element={<Login />} />
+          <Route path="/login" element={<CreateMembership />} />
           <Route path="/register" element={<Register />} />
           <Route path="/products/:slug" element={<ProductDetails />} />
           <Route path="*" element={<NotFound />} />
