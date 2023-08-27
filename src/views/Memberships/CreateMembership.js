@@ -1,11 +1,11 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, useFieldArray } from "react-hook-form";
 import { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const CreateMembership = () => {
-
-  const [inputAddress , setInputAddress] = useState([])
+  const [inputAddress, setInputAddress] = useState([]);
 
   const membershipFormSchema = yup.object().shape({
     membershipId: yup.string().required("Membership Id is required! "),
@@ -19,14 +19,16 @@ const CreateMembership = () => {
       .array()
       .of(
         yup.object({
-          city: yup.string().min(4).required(),
-          streetName: yup.string().min(4).required("Street Name is required"),
-          town: yup.string().min(4).required(),
+          city: yup.string().min(4 , 'City must be at least 4 characters').required("City is required"),
+          streetName: yup.string().min(4, 'Street Name must be at least 4 characters').required("Street Name is required"),
+          town: yup.string().min(4, 'Town must be at least 4 characters').required("town is required"),
         })
       )
       .required(),
+    dateOfBirth: yup.string().required(),
     userId: yup.string().required(),
     amountOfMembership: yup.string().required("Amount is required!"),
+    bmiType:yup.string.required()
   });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const formOptions = {
@@ -35,9 +37,16 @@ const CreateMembership = () => {
       addresses: [],
     },
   };
-  const { register, handleSubmit, reset, setValue,watch,
-     control, remove, formState ,getValues,append} =
-    useForm(formOptions);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    watch,
+    control,
+    formState,
+    getValues,
+  } = useForm(formOptions);
   const { errors } = formState;
 
   const onSubmitHandler = (event) => {
@@ -46,26 +55,30 @@ const CreateMembership = () => {
   };
 
   const addAddress = () => {
-    const currentAddresses = getValues('addresses');
-    setValue('addresses', [
+    const currentAddresses = getValues("addresses");
+    setValue("addresses", [
       ...currentAddresses,
-      { city: '', streetName: '', town: '' },
+      { city: "", streetName: "", town: "" },
     ]);
-    
-    console.log(getValues('addresses'));
+
+    console.log(getValues("addresses"));
   };
 
   const removeAddress = (index) => {
     remove(`address.${index}`);
   };
 
-  const numbersOfAddress = watch('addresses') ;
+  const numbersOfAddress = watch("addresses");
 
-  // useEffect(()=>{
-  //   setValue('addresses', [
-  //     { city: '', streetName: '', town: '' },
-  //   ]);
-  // },[numbersOfAddress])
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "addresses",
+  });
+
+  const getMethod = (event) => {
+    console.log(event);
+    return "hellopw";
+  };
 
   return (
     <>
@@ -86,6 +99,8 @@ const CreateMembership = () => {
                   className="row g-3"
                   onSubmit={handleSubmit(onSubmitHandler)}
                 >
+                   <h3><b> <FontAwesomeIcon icon="fa-brands fa-twitter" /> Personal information</b></h3>
+                   <hr/>
                   <div className="col-md-3">
                     <label htmlFor="membershipId" className="form-label">
                       Membership Id
@@ -203,7 +218,24 @@ const CreateMembership = () => {
                       {errors.contactNumber?.message}
                     </div>
                   </div>
-                  <div className="col-md-3">
+                  <div className="col-md-2">
+                    <label htmlFor="dateOfBirth" className="form-label">
+                      Birth
+                    </label>
+                    <input
+                      {...register("dateOfBirth")}
+                      className={`form-control mt-1 ${
+                        errors.userId ? "is-invalid" : ""
+                      }`}
+                      type="date"
+                      id="dateOfBirth"
+                    />
+                    <div className="invalid-feedback">
+                      {errors.dateOfBirth?.message}
+                    </div>
+                  </div>
+
+                  <div className="col-md-1">
                     <label htmlFor="userId" className="form-label">
                       User Key
                     </label>
@@ -237,48 +269,110 @@ const CreateMembership = () => {
                       </h4>
                     </div>
                   </div>
-
-                 <span>{getValues('addresses') && getValues('addresses').length}</span>
-
-                    {getValues('addresses') && getValues('addresses').map((_, index) => (
-          <div key={index} className="form-row">
-            <Controller
-              name={`addresses[${index}].city`}
-              control={control}
-              defaultValue=""
-              render={({ field }) => (
-              <div className="col-md-3">
-                  <label htmlFor={index+field} className="form-label">{field[index]}</label>
-                  <input
-                  className="form-control mt-1"
-                  type="text"
-                  {...field}
-                  placeholder={"Enter "+field[index]}
-                />
-                  {/* </div>
-                  <div className="col-md-3">
-                  <label htmlFor="index+field} className="form-label">{field.streetName}</label>
-                  <input
-                  className="form-control mt-1"
-                  type="text"
-                  {...field}
-                  placeholder={"Enter "+field.streetName}
-                />
-                  </div>
-                  <div className="col-md-3">
-                  <label htmlFor="index+field} className="form-label">{field.town}</label>
-                  <input
-                  className="form-control mt-1"
-                  type="text"
-                  {...field}
-                  placeholder={"Enter "+field.town}
-                /> */}
-                  </div> 
-              )}
-            />
-          </div>
-        ))}
                     
+                  {getValues("addresses") &&
+                    getValues("addresses").map((_, index) => (
+                     <>
+                        <div className="col-md-4">
+                        <Controller
+                          name='City'
+                          control={control}
+                          defaultValue=""
+                          render={({ field }) => (
+                            <>
+                              <label
+                                htmlFor={index + field}
+                                className="form-label"
+                              >
+                                City Name
+                              </label>
+                              <input
+                                type="text"
+                                {...field}
+                                className={`form-control mt-1 ${errors.addresses && errors.addresses[index]?.city ? "is-invalid" : ""}`}
+                                placeholder={"Enter City name"}
+                              />
+                        {errors.addresses && errors.addresses[index]?.city && (
+                        <div className="invalid-feedback">
+                          {errors.addresses[index]?.city.message}
+                        </div>
+                      )}
+                              </>
+                          )}
+                        />
+                        </div>
+                        <div className="col-md-4">
+                        <Controller
+                          name={`addresses[${index}].town`}
+                          control={control}
+                          defaultValue=""
+                          render={({ field }) => (
+                              <>
+                                <label
+                                  htmlFor={index + field}
+                                  className="form-label"
+                                >
+                                  Town Name
+                                </label>
+                                <input
+                                  name={`addresses[${index}].city`}
+                                  type="text"
+                                  {...field}
+                                  className={`form-control mt-1 ${errors.addresses && errors.addresses[index]?.town ? "is-invalid" : ""}`}
+                                  placeholder={"Town name"}
+                                />
+                      {errors.addresses && errors.addresses[index]?.town && (
+                        <div className="invalid-feedback">
+                          {errors.addresses[index]?.town.message}
+                        </div>
+                      )}
+                              </>
+                          )}
+                        />
+                        </div>
+                        <div className="col-md-4">
+                        <Controller
+                         name={`addresses[${index}].streetName`}
+                          control={control}
+                          render={({ field }) => (
+                              <>
+                                <label
+                                  htmlFor={index + field}
+                                  className="form-label"
+                                >
+                                  Town Name
+                                </label>
+                                <input
+                                  type="text"
+                                  {...field}
+                                  className={`form-control mt-1 ${errors.addresses && errors.addresses[index]?.streetName ? "is-invalid" : ""}`}
+                                  placeholder={"Street name"}
+                                />
+                                {errors.addresses && errors.addresses[index]?.streetName && (
+                                  <div className="invalid-feedback">
+                                    {errors.addresses[index]?.streetName.message}
+                                  </div>
+                                )} 
+                              </>
+                          )}
+                        />
+                        
+                        </div>
+                        </>
+                    ))}
+<hr/>
+          <div className="form-row">
+  <h3><b> <FontAwesomeIcon icon="fa-brands fa-twitter" /> Body measurements</b></h3>
+  <hr/>  
+        <div className="form-row">
+                <div className="form-group col-md-12">
+                <h4 className="jumbotron text-center"><b>BMI Calculation</b></h4>
+                </div>
+            </div>
+
+          </div>
+
+
                   <div className="col-12">
                     <button type="submit" className="btn btn-primary">
                       Sign in
