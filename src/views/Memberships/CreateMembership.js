@@ -28,7 +28,6 @@ const CreateMembership = () => {
     dateOfBirth: yup.string().required(),
     userId: yup.string().required(),
     amountOfMembership: yup.string().required("Amount is required!"),
-    bmiType:yup.string.required()
   });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const formOptions = {
@@ -364,7 +363,7 @@ const CreateMembership = () => {
           <div className="form-row">
   <h3><b> <FontAwesomeIcon icon="fa-brands fa-twitter" /> Body measurements</b></h3>
   <hr/>  
-        <div className="form-row">
+    <div className="form-row">
                 <div className="form-group col-md-12">
                 <h4 className="jumbotron text-center"><b>BMI Calculation</b></h4>
                 </div>
