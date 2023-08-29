@@ -29,6 +29,7 @@ const Membershiptable =(props)=>{
         email: "namal120@gmail.com",
         contactno: "0756854286",
         status:"Active"
+      
     },
 
 
