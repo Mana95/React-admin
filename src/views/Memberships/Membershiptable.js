@@ -3,6 +3,7 @@ import { useState } from "react";
 // import Button from 'react-bootstrap/Button';
 import Viewmembership from "./Viewmember";
 import { useNavigate } from "react-router-dom";
+import CreateMembership from "./CreateMembership";
 
 // import { useHistory } from 'react-router-dom';
 // import UseHis
@@ -75,7 +76,6 @@ const handleClose = ()=>{
 }
 
 return(
-
     <div className="container-fluid">
         <div className="container">
           <div className="row mt-4">
