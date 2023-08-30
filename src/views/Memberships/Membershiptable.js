@@ -3,10 +3,10 @@ import { useState } from "react";
 // import Button from 'react-bootstrap/Button';
 import Viewmembership from "./Viewmember";
 import { useNavigate } from "react-router-dom";
-import CreateMembership from "./CreateMembership";
+import Table from "../../components/table/Table";
 
-// import { useHistory } from 'react-router-dom';
-// import UseHis
+
+
 
 const Membershiptable =(props)=>{
 
@@ -29,7 +29,9 @@ const Membershiptable =(props)=>{
         email: "namal120@gmail.com",
         contactno: "0756854286",
         status:"Active"
+      
     },
+
 
     {
       id:3,
@@ -52,28 +54,16 @@ const Membershiptable =(props)=>{
     }
 ];
 
+//table fields
+const tableFields = ['Id', 'Owner', 'Type','Valid Period','Email','Contactno','Status'];
+const navigatepath = 'viewmember'
+
 //view member
-const[selectedMember, setSelectedMember] = useState(null);
-const [show,setShow] = useState(false);
-const navigate = useNavigate();
+// const[selectedMember, setSelectedMember] = useState(null);
 
 
-const viewmeber =(r) =>{
-  if(r !=null){
-    setSelectedMember(r);
-      navigate('/viewmember');
-  }
-  
-  setShow(true);
-  console.log(selectedMember);
 
- 
-  // console.log("Member ",selectedMember);
-}
 
-const handleClose = ()=>{
-  setShow(false);
-}
 
 return(
     <div className="container-fluid">
@@ -89,53 +79,15 @@ return(
           </div>
           <div className="row">
             <div className="col-md-12">
-            <div className="mt-3">
-            <table className="table table-striped">
-  <thead>
-    <tr>
-      <th scope="col">Id</th>
-      <th scope="col">Owner</th>
-      <th scope="col">Type</th>
-      <th scope="col">Valid period</th>
-      <th scope="col">Email</th>
-      <th scope="col">Contact no</th>
-      <th scope="col">Status</th>
-      <th scope="col" className="text-center">Action</th>
-    </tr>
-  </thead>
-  <tbody>
-    {records.map((r)=>(
-        <tr key={r.id}>
-        <td>{r.id}</td>
-        <td>{r.owner}</td>
-        <td>{r.type}</td>
-        <td>{r.validperiod}</td>
-        <td>{r.email}</td>
-        <td>{r.contactno}</td>
-        <td>{r.status == "Active"? <span className="badge bg-success">Active</span>: <span className="badge bg-danger">Deleted</span>}</td>
-        <td className="text-center">
-        <button type="button" className="btn btn-primary" onClick={()=>viewmeber(r)}>View</button>
-        <button type="button" className="btn btn-danger">Delete</button>
-        
+              <Table fields={tableFields} navpath = {navigatepath} data={records} ></Table>
 
-        </td>
-      
-      
-      </tr>
-    ))
-    }
-   
-    
-   
-  </tbody>
-</table>
-            </div>
 
             </div>
           </div>
           
+         
 
-            <h1>{selectedMember && <div>{selectedMember.owner}</div>}</h1>
+            {/* <h1>{selectedMember && <div>{selectedMember.owner}</div>}</h1> */}
         </div>
         {/* <Membermodal isOpen={open} member={selectedMember}></Membermodal> */}
 
