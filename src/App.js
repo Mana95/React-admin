@@ -8,6 +8,7 @@ import Login from './components/Access/Login';
 import CreateMembership from './views/Memberships/CreateMembership';
 import Membershiptable from './views/Memberships/Membershiptable';
 import Viewmembership from './views/Memberships/Viewmember';
+import NewSupplier from './views/administration/suppliers/NewSupplier';
 
 
 
@@ -24,6 +25,7 @@ const App = ()=> {
           <Route path="/register" element={<Register />} />
           <Route path="/products/:slug" element={<ProductDetails />} />
           <Route path="*" element={<NotFound />} />
+          <Route path="/new-supplier" element={<NewSupplier />} />
     </Routes>
     </Suspense>
     </>
