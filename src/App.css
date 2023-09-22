@@ -13,6 +13,12 @@
   }
 }
 
+.profile-img{
+  max-height:100px;
+  width:130px;
+  padding: 10px;
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;

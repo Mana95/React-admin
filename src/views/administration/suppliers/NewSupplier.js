@@ -1,9 +1,12 @@
-import { useForm,} from "react-hook-form";
+import { useForm, } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { Controller, useFieldArray } from "react-hook-form";
+import { useState } from "react";
 
 
 const NewSupplier = () => {
+    const [inputAddress, setInputAddress] = useState([]);
 
     const supplierFormSchema = yup.object().shape({
         supplierId: yup.string().required("supplier id is required"),
@@ -17,21 +20,32 @@ const NewSupplier = () => {
         companyName: yup.string().required("company namr is required"),
         contactNumber: yup.string().required("contact number is required"),
         supplierCategoryType: yup.string().required("category type is requried"),
-        address: yup.string().required("address is required"),
-
+        addresses: yup
+            .array()
+            .of(
+                yup.object({
+                    city: yup.string().min(4, 'City must be at least 4 characters').required("City is required"),
+                    streetName: yup.string().min(4, 'Street Name must be at least 4 characters').required("Street Name is required"),
+                    town: yup.string().min(4, 'Town must be at least 4 characters').required("town is required"),
+                })
+            )
     });
 
     const formOptions = {
         resolver: yupResolver(supplierFormSchema),
         defaultValues: {
-
+            addresses: [],
         },
     };
 
     const {
         register,
         formState,
+        control,
         reset,
+        watch,
+        getValues,
+        setValue,
         handleSubmit,
 
     } = useForm(formOptions);
@@ -40,6 +54,36 @@ const NewSupplier = () => {
     const onSubmitHandler = (event) => {
         console.log({ event });
         reset();
+    }
+
+    const addAddress = () => {
+        const currentAddresses = getValues("addresses");
+        setValue("addresses", [...currentAddresses,
+        { city: "", streetName: "", town: "" }
+        ]);
+        console.log(getValues("addresses"));
+    };
+
+    const removeAddress = (index) => {
+        remove(`address.${index}`);
+    }
+
+    const numbersOfAddress = watch("addresses");
+
+    const { fields, append, remove } = useFieldArray({
+        control,
+        name: "addresses",
+    });
+
+    const getMethod = (event) => {
+        console.log(event);
+        return "hellow";
+    };
+
+    const [file, setFile] = useState();
+    function handleChange(e) {
+        console.log(e.target.files);
+        setFile(URL.createObjectURL(e.target.files[0]));
     }
 
 
@@ -59,6 +103,20 @@ const NewSupplier = () => {
                         </div>
                         <div className="card-body">
                             <form onSubmit={handleSubmit(onSubmitHandler)}>
+                                <div className="row">
+                                    <div className="col-md-4"></div>
+                                    <div className="col-md-4">
+                                        <center>
+                                            <div className="form-row mt-3 mb-3">
+                                                <h2>Add Profile Image:</h2>
+                                                <img src={file} className="profile-img" />
+                                                <input type="file" className="form-control" onChange={handleChange} />
+                                            </div>
+                                            
+                                        </center>
+                                    </div>
+                                    <div className="col-md-4"></div>
+                                </div>
                                 <div className="row">
                                     <div className="col-md-6">
                                         <div className="form-row mt-3">
@@ -135,13 +193,6 @@ const NewSupplier = () => {
                                     </div>
 
                                     <div className="col-md-6">
-                                        <center>
-                                            <div className="form-row mt-3">
-                                                
-                                                <input type="file" className="form-control" id="customFile" />
-                                            </div>
-                                        </center>
-
                                         <div className="form-row mt-3">
                                             <label htmlFor="contactNumber">Contact Number</label>
                                             <input type="text" {...register("contactNumber")}
@@ -164,12 +215,134 @@ const NewSupplier = () => {
                                         </div>
 
                                         <div className="form-row mt-3">
-                                            <label htmlFor="address">Private Address</label>
+                                            <label htmlFor="address">Address</label>
                                             <input type="text" {...register("address")}
                                                 className={`form-control mt-1 ${errors.address ? "is-invalid" : ""
                                                     }`} id="address" />
                                             <div className="invalid-feedback">{errors.address?.message}</div>
                                         </div>
+
+                                        <div className="form-row">
+                                            <div className="form-group col-md-12 mt-3">
+                                                <h4 className="jumbotron text-left">
+                                                    <b>Address </b>
+                                                    <button
+                                                        type="button"
+                                                        className="btn btn-primary"
+                                                        onClick={addAddress}
+                                                    >
+                                                        <b>+</b>
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        className="btn btn-danger"
+                                                        onClick={removeAddress}
+                                                    >
+                                                        <b>-</b>
+                                                    </button>
+                                                </h4>
+                                            </div>
+                                        </div>
+
+                                        {getValues("address") && getValues("addresses").map((_, index) => (
+                                            <>
+                                                <div className="row">
+                                                    <div className="col-md-4">
+                                                        <Controller
+                                                            name='City'
+                                                            control={control}
+                                                            defaultValue=""
+                                                            render={({ field }) => (
+                                                                <>
+                                                                    <label
+                                                                        htmlFor={index + field}
+                                                                        className="form-label"
+                                                                    >
+                                                                        City Name
+                                                                    </label>
+                                                                    <input
+                                                                        type="text"
+                                                                        {...field}
+                                                                        className={`form-control mt-1 ${errors.addresses && errors.addresses[index]?.city ? "is-invalid" : ""}`}
+                                                                    />
+                                                                    {errors.addresses && errors.addresses[index]?.city && (
+                                                                        <div className="invalid-feedback">
+                                                                            {errors.addresses[index]?.city.message}
+                                                                        </div>
+                                                                    )}
+                                                                </>
+                                                            )}
+                                                        />
+                                                    </div>
+                                                    <div className="col-md-4">
+                                                        <Controller
+                                                            name={`addresses[${index}].town`}
+                                                            control={control}
+                                                            defaultValue=""
+                                                            render={({ field }) => (
+                                                                <>
+                                                                    <label
+                                                                        htmlFor={index + field}
+                                                                        className="form-label"
+                                                                    >
+                                                                        Town Name
+                                                                    </label>
+                                                                    <input
+                                                                        name={`addresses[${index}].city`}
+                                                                        type="text"
+                                                                        {...field}
+                                                                        className={`form-control mt-1 ${errors.addresses && errors.addresses[index]?.town ? "is-invalid" : ""}`}
+
+                                                                    />
+                                                                    {errors.addresses && errors.addresses[index]?.town && (
+                                                                        <div className="invalid-feedback">
+                                                                            {errors.addresses[index]?.town.message}
+                                                                        </div>
+                                                                    )}
+                                                                </>
+                                                            )}
+                                                        />
+                                                    </div>
+                                                    <div className="col-md-4">
+                                                        <Controller
+                                                            name={`addresses[${index}].streetName`}
+                                                            control={control}
+                                                            render={({ field }) => (
+                                                                <>
+                                                                    <label
+                                                                        htmlFor={index + field}
+                                                                        className="form-label"
+                                                                    >
+                                                                        Town Name
+                                                                    </label>
+                                                                    <input
+                                                                        type="text"
+                                                                        {...field}
+                                                                        className={`form-control mt-1 ${errors.addresses && errors.addresses[index]?.streetName ? "is-invalid" : ""}`}
+
+                                                                    />
+                                                                    {errors.addresses && errors.addresses[index]?.streetName && (
+                                                                        <div className="invalid-feedback">
+                                                                            {errors.addresses[index]?.streetName.message}
+                                                                        </div>
+                                                                    )}
+                                                                </>
+                                                            )}
+                                                        />
+
+                                                    </div>
+                                                </div>
+                                            </>
+                                        ))}
+
+
+
+
+
+
+
+
+
 
                                         <div className="form-row mt-3">
                                             <label htmlFor="firstName">Company Address</label>
@@ -183,11 +356,11 @@ const NewSupplier = () => {
                                         <div className="row mt-3">
                                             <div className="col-md-8"></div>
                                             <div className="col-md-4">
-                                            <button type="submit" className="btn btn-primary btn-block w-100">
-                                                Sign in
-                                             </button>
+                                                <button type="submit" className="btn btn-primary btn-block w-100">
+                                                    Sign in
+                                                </button>
                                             </div>
-                                         </div>
+                                        </div>
                                     </div>
                                 </div>
                             </form>
