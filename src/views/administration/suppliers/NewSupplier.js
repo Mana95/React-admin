@@ -1,6 +1,7 @@
 import { useForm,} from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import Button from "../../../ui/gym-input";
 
 
 const NewSupplier = () => {
@@ -183,6 +184,12 @@ const NewSupplier = () => {
                                         <div className="row mt-3">
                                             <div className="col-md-8"></div>
                                             <div className="col-md-4">
+                                                <Button varient="success" size="lg">Success Button</Button>
+                                                <Button varient="dark">Dark Button</Button>
+                                                <Button varient="primary">Primary Button</Button>
+                                                <Button varient="secondary">Secondary Button</Button>
+                                                <Button varient="warning">Warning Button</Button>
+                                                <Button varient="danger">Danger Button</Button>
                                             <button type="submit" className="btn btn-primary btn-block w-100">
                                                 Sign in
                                              </button>
