@@ -2,6 +2,10 @@ import { useForm,} from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Button from "../../../ui/gym-input";
+import InputField from "../../../ui/gym-input";
+import { Validators } from "../../../ui/gym-input";
+
+import React, {useState} from 'react';
 
 
 const NewSupplier = () => {
@@ -43,8 +47,17 @@ const NewSupplier = () => {
         reset();
     }
 
+    const [value, setValue] = useState('');
+
+    const handleChange = (value) => {
+        console.log(value);
+        setValue(value);
+    };
+
 
     return (
+
+        
 
         <div className="card mb-8">
             <div className="card-body ">
@@ -58,6 +71,20 @@ const NewSupplier = () => {
                                 </b>
                             </h2>
                         </div>
+
+                        <div className="container">
+                        <InputField 
+                                            value={value} 
+                                            placeholder='test' 
+                                            type='text' 
+                                            label='Input Component' 
+                                            validators={[
+                                                {check: Validators.required, message: 'this field is required'}
+                                            ]}
+                                            onChange={handleChange}/> 
+
+                        </div>
+                        
                         <div className="card-body">
                             <form onSubmit={handleSubmit(onSubmitHandler)}>
                                 <div className="row">
