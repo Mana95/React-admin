@@ -2,8 +2,7 @@ import { Route } from "react-router-dom";
 import UnAuthGuard from "../guards/UnAuthGuard";
 import Login from "../components/Access/Login";
 import Register from "../components/Access/Register";
-import Membershiptable from "../views/Memberships/Membershiptable";
-import Viewmembership from "../views/Memberships/Viewmember";
+import ForGotPassword from "../components/Access/ForGotPassword";
 
 const UnAuthRoutes = [
   <Route
@@ -17,14 +16,9 @@ const UnAuthRoutes = [
     element={<UnAuthGuard component={<Register />} />}
   />,
   <Route
-    key="Membertable"
-    path="/membertable"
-    element={<UnAuthGuard component={<Membershiptable />} />}
-  />,
-  <Route
-    key="ViewMember"
-    path="/viewmember"
-    element={<UnAuthGuard component={<Viewmembership />} />}
+    key="forgot-pw"
+    path="/forgot-pw"
+    element={<UnAuthGuard component={<ForGotPassword />} />}
   />,
 ];
 
