@@ -23,6 +23,8 @@ const Login = () => {
 
   const onSubmitHandler = (data) => {
     console.log({ data });
+    localStorage.setItem("authToken", 1232);
+    navigate("/home");
   };
 
   return (
@@ -41,7 +43,6 @@ const Login = () => {
               placeholder="Enter email"
             />
             <div className="invalid-feedback">{errors.email?.message}</div>
-            {/* <p className="invalid-feedback">{errors.email?.message}</p> */}
           </div>
           <div className="form-group mt-3">
             <label>Password</label>
@@ -71,7 +72,7 @@ const Login = () => {
             </div>
           </div>
           <p className="text-center mt-2">
-            Forgot <Link to="/forgot-pw">password?</Link>
+            Forgot <Link to="/forgot-pw">Password?</Link>
           </p>
         </div>
       </form>

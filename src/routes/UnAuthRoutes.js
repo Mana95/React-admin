@@ -1,5 +1,5 @@
 import { Route } from "react-router-dom";
-import UnAuthGuard from "../guards/UnAuthGuard";
+import UnAuthGuard from "./guards/UnAuthGuard";
 import Login from "../components/Access/Login";
 import Register from "../components/Access/Register";
 import ForGotPassword from "../components/Access/ForGotPassword";
