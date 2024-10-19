@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-
-const AuthGuard = ({ component }) => {
+import { useNavigate, Outlet } from "react-router-dom";
+import BaseLayout from "../BaseLayout";
+const AuthGuard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -17,7 +17,11 @@ const AuthGuard = ({ component }) => {
     }
   }, [navigate]);
 
-  return <>{component}</>;
+  return (
+    <BaseLayout>
+      <Outlet />
+    </BaseLayout>
+  );
 };
 
 export default AuthGuard;
