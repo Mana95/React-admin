@@ -1,0 +1,4 @@
+﻿{
+   "connectionString": "mongodb://localhost/auth1_db",
+    "secret": "This is the secret key of the project 23y83643284234DFSDH56"
+}
