@@ -1,6 +1,4 @@
 import { Route } from "react-router-dom";
-import NotFound from "../views/NotFound";
-import AuthGuard from "./guards/AuthGuard";
 import MemberShipTable from "../views/Memberships/Membershiptable";
 import Home from "../components/home/Home";
 
